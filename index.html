@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>El laberinto del minotauro</title>
+        <link rel="shortcut icon" href="https://st2.depositphotos.com/5827110/10860/v/450/depositphotos_108602782-stock-illustration-minotaur-maze-vector.jpg" type="image/x-icon">
+        <style>
+            body{
+                background-color: black;
+                color: white;
+            }
+            #mapa{
+                justify-content: center;
+            }
+            table{
+                border: 1px solid white;
+                border-collapse: collapse;
+                max-width: 99vw;
+                max-height: 99vh;
+                text-align: center;
+                vertical-align: middle;
+            }
+            tr{
+                margin: 0px;
+                padding: 0px;
+            }
+            td{
+                margin: 0px;
+                padding: 0px;
+                width: 1.5vw;
+                height: 1.5vw;
+            }
+            .apagado{
+                background-color: black;
+                
+            }
+            .jugador{
+                background-color: blue;
+                border: 1px solid black;
+            }
+            .enemigo{
+                background-color: red;
+                border: 1px solid black;
+            }
+            .encendido{
+                background-color: white;
+                border: 1px solid black;
+            }
+            .tesoro{
+                background-color: yellow;
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="recarga" style="display: flex;flex-flow: column wrap; justify-content: center;"><button style="width: fit-content; border-radius: 10px;padding: 5px;background-color: rgb(234, 233, 233);border: 1px solid white;cursor:pointer;">Reiniciar</button></div>
+        <div id="mapa" style="display: flex;"></div>
+        
+    </body>
+    <script src="index.js"></script>
+</html>
