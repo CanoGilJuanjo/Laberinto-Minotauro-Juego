@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     var mapa = []; //Array vacio que rellenaremos con el mapa
     const DENSIDAD_MAPA = 4; //Inversamente proporcional. A mayor numero menor densidad
     var mapaDibujo = document.querySelector("#mapa"); //Variable que almacena la referencia del mapa que se representa a partir del mapa interno del juego
-    var control = false;
+    var control = false; //Control para parar la logica del juego
 
     var jugador = {
         posicionI: 0,
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded",()=>{
         }
     }
 
-     //Segundo procesado del mapa - Horizontal|Vertical
+    //Segundo procesado del mapa - Horizontal|Vertical
     for(let i = 0; i<MAX_CELDAS;i++){
         for(let j = 0;j<MAX_CELDAS;j++){
             contador = 0;
@@ -115,7 +115,17 @@ document.addEventListener("DOMContentLoaded",()=>{
             }
         }
     }
-
+    //Primer procesado del mapa - Generador puntos origen
+    for(let i = 0; i<MAX_CELDAS;i++){
+        mapa.push([]);
+        for(let j = 0;j<MAX_CELDAS;j++){
+            if(Math.floor(Math.random()*DENSIDAD_MAPA) == 1){
+                mapa[i].push(1)
+            }else{
+                mapa[i].push(0)
+            }
+        }
+    }
     //Limpieza 2
     for(let i = 0; i<MAX_CELDAS;i++){
         for(let j = 0;j<MAX_CELDAS;j++){
@@ -162,90 +172,151 @@ document.addEventListener("DOMContentLoaded",()=>{
     mapa[minotauro.posicionI][minotauro.posicionJ] = 2;
 
     //IA
-    function IA(){
+    /* function IA(){
         if(!tesoro.recogido){
             //Primero seteamos la direccion entre las cuatro posibles W A S o D
             mapa[minotauro.posicionI][minotauro.posicionJ] = 1;
-            switch (Math.floor(Math.random()*5)) {
-                case 1:
-                    //W
-                    minotauro.direccion = "w"
-                    if(minotauro.posicionI-2>=0 && mapa[minotauro.posicionI-2][minotauro.posicionJ] == 1){
-                        if(minotauro.posicionI-1>=0 && mapa[minotauro.posicionI-1][minotauro.posicionJ] == 1){
-                            minotauro.posicionI  = minotauro.posicionI-2
+            var random = Math.floor((Math.random()*4)+1)
+            console.log(random);
+            var contador = 0;
+            do{
+                switch (random) {
+                    case 1:
+                        random = 0
+                        //W
+                        minotauro.direccion = "arriba"
+                        if(minotauro.posicionI-2>=0 && mapa[minotauro.posicionI-2][minotauro.posicionJ] == 1){
+                            if(mapa[minotauro.posicionI-1][minotauro.posicionJ] == 1){
+                                minotauro.posicionI  = minotauro.posicionI-2
+                            }else if(mapa[minotauro.posicionI-1][minotauro.posicionJ] == 3){
+                                jugador.muerto = true
+                            }
+                        }else if(minotauro.posicionI-2>=0 && mapa[minotauro.posicionI-2][minotauro.posicionJ] == 3){
+                            jugador.muerto = true
+                        }else if(minotauro.posicionI-1>=0 && mapa[minotauro.posicionI-1][minotauro.posicionJ] == 1){
+                            minotauro.posicionI  = minotauro.posicionI-1
                         }else if(minotauro.posicionI-1>=0 && mapa[minotauro.posicionI-1][minotauro.posicionJ] == 3){
                             jugador.muerto = true
+                        }else {
+                            random = Math.floor((Math.random()*4)+1)
                         }
-                    }else if(minotauro.posicionI-2>=0 && mapa[minotauro.posicionI-2][minotauro.posicionJ] == 3){
-                        jugador.muerto = true
-                    }else if(minotauro.posicionI-1>=0 && mapa[minotauro.posicionI-1][minotauro.posicionJ] == 1){
-                        minotauro.posicionI  = minotauro.posicionI-1
-                    }
-                break;
-                case 2:
-                    //A
-                    minotauro.direccion = "a"
-                    if(minotauro.posicionJ-2>=0 && mapa[minotauro.posicionI][minotauro.posicionJ-2] == 1){
-                        if(minotauro.posicionJ-1>=0 && mapa[minotauro.posicionI][minotauro.posicionJ-1] == 1){
-                            minotauro.posicionJ  = minotauro.posicionJ-2
+                    break;
+                    case 2:
+                        random = 0
+                        //A
+                        minotauro.direccion = "izquierda"
+                        if(minotauro.posicionJ-2>=0 && mapa[minotauro.posicionI][minotauro.posicionJ-2] == 1){
+                            if(mapa[minotauro.posicionI][minotauro.posicionJ-1] == 1){
+                                minotauro.posicionJ  = minotauro.posicionJ-2
+                            }else if(mapa[minotauro.posicionI][minotauro.posicionJ-1] == 3){
+                                jugador.muerto = true
+                            }
+                        }else if(minotauro.posicionJ-2>=0 && mapa[minotauro.posicionI][minotauro.posicionJ-2] == 3){
+                            jugador.muerto = true
+                        }else if(minotauro.posicionJ-1>=0 && mapa[minotauro.posicionI][minotauro.posicionJ-1] == 1){
+                            minotauro.posicionJ  = minotauro.posicionJ-1
                         }else if(minotauro.posicionJ-1>=0 && mapa[minotauro.posicionI][minotauro.posicionJ-1] == 3){
                             jugador.muerto = true
+                        }else {
+                            random = Math.floor((Math.random()*4)+1)
                         }
-                    }else if(minotauro.posicionJ-2>=0 && mapa[minotauro.posicionI][minotauro.posicionJ-2] == 3){
-                        jugador.muerto = true
-                    }else if(minotauro.posicionJ-1>=0 && mapa[minotauro.posicionI][minotauro.posicionJ-1] == 1){
-                        minotauro.posicionJ  = minotauro.posicionJ-1
-                    }
-                break;
-                case 3:
-                    //D
-                    minotauro.direccion = "d"
-                    if(minotauro.posicionJ+2<=MAX_CELDAS-1 && mapa[minotauro.posicionI][minotauro.posicionJ+2] == 1){
-                        if(minotauro.posicionJ+1<=MAX_CELDAS-1 && mapa[minotauro.posicionI][minotauro.posicionJ+1] == 1){
-                            minotauro.posicionJ  = minotauro.posicionJ+2
+                    break;
+                    case 3:
+                        random = 0
+                        //D
+                        minotauro.direccion = "derecha"
+                        if(minotauro.posicionJ+2<=MAX_CELDAS-1 && mapa[minotauro.posicionI][minotauro.posicionJ+2] == 1){
+                            if(mapa[minotauro.posicionI][minotauro.posicionJ+1] == 1){
+                                minotauro.posicionJ  = minotauro.posicionJ+2
+                            }else if(mapa[minotauro.posicionI][minotauro.posicionJ+1] == 3){
+                                jugador.muerto = true
+                            }
+                        }else if(minotauro.posicionJ+2<=MAX_CELDAS-1 && mapa[minotauro.posicionI][minotauro.posicionJ+2] == 3){
+                            jugador.muerto = true
+                        }else if(minotauro.posicionJ+1<=MAX_CELDAS-1 && mapa[minotauro.posicionI][minotauro.posicionJ+1] == 1){
+                            minotauro.posicionJ  = minotauro.posicionJ+1
                         }else if(minotauro.posicionJ+1<=MAX_CELDAS-1 && mapa[minotauro.posicionI][minotauro.posicionJ+1] == 3){
                             jugador.muerto = true
+                        }else {
+                            random = Math.floor((Math.random()*4)+1)
                         }
-                    }else if(minotauro.posicionJ+2<=MAX_CELDAS-1 && mapa[minotauro.posicionI][minotauro.posicionJ+2] == 3){
-                        jugador.muerto = true
-                    }else if(minotauro.posicionJ+1<=MAX_CELDAS-1 && mapa[minotauro.posicionI][minotauro.posicionJ+1] == 1){
-                        minotauro.posicionJ  = minotauro.posicionJ+1
-                    }
-                break;
-                case 4:
-                    //S
-                    minotauro.direccion = "s"
-                    if(minotauro.posicionI+2<=MAX_CELDAS-1 && (mapa[minotauro.posicionI+2][minotauro.posicionJ] == 1)){
-                        if(minotauro.posicionI+1<=MAX_CELDAS-1 && mapa[minotauro.posicionI+1][minotauro.posicionJ] == 1){
-                            minotauro.posicionI  = minotauro.posicionI+2
+                    break;
+                    case 4:
+                        random = 0
+                        //S
+                        minotauro.direccion = "abajo"
+                        if(minotauro.posicionI+2<=MAX_CELDAS-1 && (mapa[minotauro.posicionI+2][minotauro.posicionJ] == 1)){
+                            if(mapa[minotauro.posicionI+1][minotauro.posicionJ] == 1){
+                                minotauro.posicionI  = minotauro.posicionI+2
+                            }else if(mapa[minotauro.posicionI+1][minotauro.posicionJ] == 3){
+                                jugador.muerto = true
+                            }
+                        }else if(minotauro.posicionI+2<=MAX_CELDAS-1 && mapa[minotauro.posicionI+2][minotauro.posicionJ] == 3){
+                            jugador.muerto = true
+                        }else if(minotauro.posicionI+1<=MAX_CELDAS-1 && mapa[minotauro.posicionI+1][minotauro.posicionJ] == 1){
+                            minotauro.posicionI  = minotauro.posicionI+1
                         }else if(minotauro.posicionI+1<=MAX_CELDAS-1 && mapa[minotauro.posicionI+1][minotauro.posicionJ] == 3){
                             jugador.muerto = true
+                        }else{
+                            random = Math.floor((Math.random()*4)+1)
                         }
-                    }else if(minotauro.posicionI+2<=MAX_CELDAS-1 && mapa[minotauro.posicionI+2][minotauro.posicionJ] == 3){
-                        jugador.muerto = true
-                    }else if(minotauro.posicionI+1<=MAX_CELDAS-1 && mapa[minotauro.posicionI+1][minotauro.posicionJ] == 1){
-                        minotauro.posicionI  = minotauro.posicionI+1
-                    }
-                break;
-            }
+                    break;
+                }
+                contador++
+            }while(random != 0 && contador < 50);
         }
-        if(!jugador.muerto){
-            console.log(minotauro.direccion);
-            mapa[minotauro.posicionI][minotauro.posicionJ] = 2;            
-            //mostrarMapa()
-        }else{
-            jugador.muerto = false
-            clearInterval(IA)
-            location.reload()
+        mapa[minotauro.posicionI][minotauro.posicionJ] = 2;
+        if(jugador.muerto){
+            control = true
             alert("Has muerto, vuelve a intentarlo")
         }
-    }
-
+    } */
     mostrarMapa()
 
+
+    let inicio = { fila: minotauro.posicionI, columna: minotauro.posicionJ };
+    let fin = { fila: tesoro.posicionI, columna: tesoro.posicionJ };
+    let camino = encontrarCaminoOptimo(mapa, inicio, fin);
+    if(camino == null){
+        location.reload()
+    }
+
+    inicio = { fila: minotauro.posicionI, columna: minotauro.posicionJ };
+    fin = { fila: jugador.posicionI, columna: jugador.posicionJ };
+    camino = encontrarCaminoOptimo(mapa, inicio, fin);
+    if(camino == null){
+        location.reload()
+    }
+
+
+    let pos = 0;
     setTimeout(()=>{
-            setInterval(()=>{if(!control)IA()},500)
-            setInterval(()=>{if(!control)generarMapa()},100)
+            setInterval(()=>{if(!control){generarMapa() }else{mostrarMapa()}},150)
+            setInterval(()=>{if(!control)
+                /* IA() */  
+                if(!control){
+                    mapa[minotauro.posicionI][minotauro.posicionJ] = 1;
+                    minotauro.posicionI = camino[pos][0]
+                    minotauro.posicionJ = camino[pos][1]
+                    mapa[minotauro.posicionI][minotauro.posicionJ] = 2;
+                    inicio = { fila: minotauro.posicionI, columna: minotauro.posicionJ };
+                    fin = { fila: jugador.posicionI, columna: jugador.posicionJ };
+                    if(pos >= camino.length-1){
+                        pos = 0;
+                        camino = encontrarCaminoOptimo(mapa, inicio, fin);
+                    }
+                    if(minotauro.posicionI == jugador.posicionI && minotauro.posicionJ == jugador.posicionJ){
+                        jugador.muerto = true
+                        control = true
+                        alert("Has muerto, vuelve a intentarlo")
+                    }
+                    if(pos+1 == camino.length-1){
+                        pos++
+                    }else{
+                        pos+=2;
+                    }
+                }
+            },500)
             //Controles del Jugador
             addEventListener("keypress",(e)=>{
                 if(!jugador.muerto && !tesoro.recogido){
@@ -291,7 +362,7 @@ document.addEventListener("DOMContentLoaded",()=>{
                     }
                 }
             })
-    },1000)
+    },500)
     
     function generarMapa(){
         if(tesoro.recogido){            
@@ -415,4 +486,99 @@ document.addEventListener("DOMContentLoaded",()=>{
         document.querySelector("#mapa").innerHTML = tabla;
     }
     document.querySelector("#recarga").addEventListener("click",()=>{location.reload()})
+
+    function encontrarCaminoOptimo(matriz, inicio, fin) {
+        // Dimensiones de la matriz
+        const filas = matriz.length;
+        const columnas = matriz[0].length;
+      
+        // Crea una matriz para almacenar las distancias desde el punto de inicio
+        const distancias = new Array(filas).fill(null).map(() => new Array(columnas).fill(Infinity));
+        distancias[inicio.fila][inicio.columna] = 0;
+      
+        // Crea una cola para realizar la búsqueda en anchura
+        const cola = [[inicio.fila, inicio.columna]];
+      
+        // Direcciones posibles para moverse en la matriz
+        const direcciones = [
+          [-1, 0], // Arriba
+          [1, 0], // Abajo
+          [0, -1], // Izquierda
+          [0, 1], // Derecha
+        ];
+      
+        // Mientras la cola no esté vacía
+        while (cola.length > 0) {
+          const [filaActual, columnaActual] = cola.shift();
+      
+          // Si se ha encontrado el punto final, se termina la búsqueda
+          if (filaActual === fin.fila && columnaActual === fin.columna) {
+            break;
+          }
+      
+          // Recorre las direcciones posibles
+          for (const [filaDesplazamiento, columnaDesplazamiento] of direcciones) {
+            const filaNueva = filaActual + filaDesplazamiento;
+            const columnaNueva = columnaActual + columnaDesplazamiento;
+      
+            // Verifica si la nueva posición es válida y no es un obstáculo
+            if (
+              filaNueva >= 1 &&
+              filaNueva < filas &&
+              columnaNueva >= 1 &&
+              columnaNueva < columnas &&
+              matriz[filaNueva][columnaNueva] !== 0
+            ) {
+              // Calcula la distancia a la nueva posición
+              const distanciaNueva = distancias[filaActual][columnaActual] + 1;
+      
+              // Si la distancia a la nueva posición es menor que la distancia actual
+              if (distanciaNueva < distancias[filaNueva][columnaNueva]) {
+                // Actualiza la distancia y agrega la nueva posición a la cola
+                distancias[filaNueva][columnaNueva] = distanciaNueva;
+                cola.push([filaNueva, columnaNueva]);
+              }
+            }
+          }
+        }
+        
+        // Si no se encontró el punto final, devuelve null
+        if (distancias[fin.fila][fin.columna] === Infinity) {
+          return null;
+        }
+      
+        // Reconstruye el camino desde el punto final hasta el punto de inicio
+        let camino = [[fin.fila, fin.columna]];
+        let filaActual = fin.fila;
+        let columnaActual = fin.columna;
+      
+        while (filaActual !== inicio.fila || columnaActual !== inicio.columna) {
+          // Encuentra la posición anterior con la menor distancia
+          let posicionAnterior = null;
+          let distanciaMinima = Infinity;
+          for (const [filaDesplazamiento, columnaDesplazamiento] of direcciones) {
+            const filaNueva = filaActual + filaDesplazamiento;
+            const columnaNueva = columnaActual + columnaDesplazamiento;
+      
+            if (
+              filaNueva >= 1 &&
+              filaNueva < filas &&
+              columnaNueva >= 1 &&
+              columnaNueva < columnas &&
+              distancias[filaNueva][columnaNueva] < distanciaMinima
+            ) {
+              posicionAnterior = [filaNueva, columnaNueva];
+              distanciaMinima = distancias[filaNueva][columnaNueva];
+            }
+          }
+      
+          // Agrega la posición anterior al camino
+          camino.unshift(posicionAnterior);
+          filaActual = posicionAnterior[0];
+          columnaActual = posicionAnterior[1];
+        }
+      
+        // Devuelve el camino encontrado
+        return camino;
+    }
 })
